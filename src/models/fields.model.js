@@ -1,22 +1,13 @@
-import mysql from "mysql2";
-import dotenv from "dotenv";
-dotenv.config();
+import pool from "../config/database.js";
 
-const pool = mysql
-  .createPool({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-  })
-  .promise();
-
+// Get Fields
 export async function getFields() {
-  // brackets around rows for destructuring
+  // Brackets around rows for destructuring
   const [rows] = await pool.query("SELECT * FROM fields");
   return rows;
 }
 
+// Get Field
 export async function getField(id) {
   const [rows] = await pool.query(
     `
@@ -29,6 +20,7 @@ export async function getField(id) {
   return rows[0];
 }
 
+// Create Field
 export async function createField(
   name,
   region,
@@ -71,7 +63,53 @@ export async function createField(
   return getField(id);
 }
 
-const fields = await getFields();
-const field = await getField(1);
+// Delete Field
+export async function deleteField(id) {
+  const [result] = await pool.query("DELETE FROM fields WHERE id = ?", [id]);
+  return result;
+}
 
-console.log(field);
+// Update Field
+export async function updateField(
+  id,
+  name,
+  region,
+  block,
+  operator,
+  partners,
+  status,
+  discovery_year,
+  onstream_date,
+  abandonment_date,
+  reservoir,
+  water_depth,
+  latitude,
+  longitude,
+  field_type
+) {
+  const [result] = await pool.query(
+    `
+    UPDATE fields
+    SET name = ?, region = ?, block = ?, operator = ?, partners = ?, status = ?, discovery_year = ?, onstream_date = ?, abandonment_date = ?, reservoir = ?, water_depth = ?, latitude = ?, longitude = ?, field_type = ?
+    WHERE id = ?
+    `,
+    [
+      name,
+      region,
+      block,
+      operator,
+      partners,
+      status,
+      discovery_year,
+      onstream_date,
+      abandonment_date,
+      reservoir,
+      water_depth,
+      latitude,
+      longitude,
+      field_type,
+      id,
+    ]
+  );
+  return getField(id);
+}
