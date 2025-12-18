@@ -1,6 +1,6 @@
 import app from "./app.js";
+import appConfig from "../config.js";
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(appConfig.PORT, "localhost", () => {
+  console.info(`Server running on port http://localhost:${appConfig.PORT}/api/docs`);
 });
