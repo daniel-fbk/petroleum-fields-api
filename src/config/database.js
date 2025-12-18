@@ -1,11 +1,12 @@
 import mysql from "mysql2";
+import appConfig from "../../config.js";
 
 const pool = mysql
   .createPool({
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    host: appConfig.DB_HOST,
+    database: appConfig.DB_NAME,
+    user: appConfig.DB_USER,
+    password: appConfig.DB_PASSWORD,
   })
   .promise();
 
