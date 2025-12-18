@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 
 // Load Swagger YAML
-const swaggerDocument = yaml.load(fs.readFileSync("./docs/swagger.yaml", "utf8"));
+const swaggerDocument = yaml.load(fs.readFileSync("./docs/swagger.yml", "utf8"));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // API root

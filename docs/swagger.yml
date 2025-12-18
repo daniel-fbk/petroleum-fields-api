@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Petroleum Fields API
+  version: 1.0.0
+  description: REST API for managing petroleum field data
+servers:
+  - url: http://localhost:8080/api
+    description: Local API server
+tags:
+  - name: Fields
+    description: Operations for petroleum fields
+components:
+  schemas:
+    Field:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Johan Sverdrup
+        region:
+          type: string
+          example: North Sea
+        block:
+          type: string
+          example: 16/2-3
+        operator:
+          type: string
+          example: Equinor
+        partners:
+          type: array
+          items:
+            type: string
+          nullable: true
+          example: [Aker BP, Petoro]
+        status:
+          type: string
+          enum: [producing, planned, shut_down, abandoned]
+          example: producing
+        discovery_year:
+          type: integer
+          example: 2010
+        onstream_date:
+          type: string
+          format: date
+          example: "2019-09-30"
+        abandonment_date:
+          type: string
+          format: date
+          nullable: true
+          example: null
+        reservoir:
+          type: string
+          example: Utsira High
+        water_depth:
+          type: number
+          example: 115
+        latitude:
+          type: number
+          example: 59.5
+        longitude:
+          type: number
+          example: 3.5
+        field_type:
+          type: string
+          enum: [oil, gas, oil & gas]
+          example: oil & gas
+      required:
+        - name
+        - region
+        - block
+        - operator
+        - status
+        - discovery_year
+        - onstream_date
+        - field_type
+paths:
+  /fields:
+    get:
+      summary: Get all fields
+      tags: [Fields]
+      responses:
+        "200":
+          description: List of fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Field"
+    post:
+      summary: Create a new field
+      tags: [Fields]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Field"
+      responses:
+        "201":
+          description: Field created
+  /fields/{id}:
+    get:
+      summary: Get a field by ID
+      tags: [Fields]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Field found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        "404":
+          description: Field not found
+    put:
+      summary: Update a field
+      tags: [Fields]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Field"
+      responses:
+        "200":
+          description: Updated field
+    delete:
+      summary: Delete a field
+      tags: [Fields]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Field deleted
