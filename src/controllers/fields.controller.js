@@ -20,22 +20,7 @@ export const getField = async (req, res, next) => {
 
 export const createField = async (req, res, next) => {
   try {
-    const field = await fieldsModel.createField(
-      req.body.name,
-      req.body.region,
-      req.body.block,
-      req.body.operator,
-      req.body.partners,
-      req.body.status,
-      req.body.discovery_year,
-      req.body.onstream_date,
-      req.body.abandonment_date,
-      req.body.reservoir,
-      req.body.water_depth,
-      req.body.latitude,
-      req.body.longitude,
-      req.body.field_type
-    );
+    const field = await fieldsModel.createField(req.body);
     res.status(201).json(field);
   } catch (err) {
     next(err);
@@ -44,24 +29,8 @@ export const createField = async (req, res, next) => {
 
 export const updateField = async (req, res, next) => {
   try {
-    const updatedField = await fieldsModel.updateField(
-      req.params.id,
-      req.body.name,
-      req.body.region,
-      req.body.block,
-      req.body.operator,
-      req.body.partners,
-      req.body.status,
-      req.body.discovery_year,
-      req.body.onstream_date,
-      req.body.abandonment_date,
-      req.body.reservoir,
-      req.body.water_depth,
-      req.body.latitude,
-      req.body.longitude,
-      req.body.field_type
-    );
-    res.json(updatedField);
+    const updatedField = await fieldsModel.updateField(req.params.id, req.body);
+    res.status(200).json(updatedField);
   } catch (err) {
     next(err);
   }

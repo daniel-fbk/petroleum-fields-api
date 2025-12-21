@@ -2,46 +2,49 @@ import pool from "../config/database.js";
 
 // Get Fields
 export async function getFields() {
-  // Brackets around rows for destructuring
   const [rows] = await pool.query("SELECT * FROM fields");
   return rows;
 }
 
-// Get Field
+// Get Field by id
 export async function getField(id) {
   const [rows] = await pool.query(
     `
-        SELECT *
-        FROM fields
-        WHERE id = ?
-        `,
+    SELECT *
+    FROM fields
+    WHERE id = ?
+    `,
     [id]
   );
   return rows[0];
 }
 
 // Create Field
-export async function createField(
-  name,
-  region,
-  block,
-  operator,
-  partners,
-  status,
-  discovery_year,
-  onstream_date,
-  abandonment_date,
-  reservoir,
-  water_depth,
-  latitude,
-  longitude,
-  field_type
-) {
+export async function createField(fieldData) {
+  const {
+    name,
+    region,
+    block = null,
+    operator,
+    partners = null,
+    status,
+    discovery_year,
+    onstream_date = null,
+    abandonment_date = null,
+    reservoir = null,
+    water_depth = null,
+    latitude,
+    longitude,
+    field_type,
+  } = fieldData;
+
   const [result] = await pool.query(
     `
-        INSERT INTO fields (name, region, block, operator, partners, status, discovery_year, onstream_date, abandonment_date, reservoir, water_depth, latitude, longitude, field_type)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
+    INSERT INTO fields
+      (name, region, block, operator, partners, status, discovery_year, onstream_date, abandonment_date, reservoir, water_depth, latitude, longitude, field_type)
+    VALUES
+      (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `,
     [
       name,
       region,
@@ -59,35 +62,31 @@ export async function createField(
       field_type,
     ]
   );
+
   const id = result.insertId;
   return getField(id);
 }
 
-// Delete Field
-export async function deleteField(id) {
-  const [result] = await pool.query("DELETE FROM fields WHERE id = ?", [id]);
-  return result;
-}
-
 // Update Field
-export async function updateField(
-  id,
-  name,
-  region,
-  block,
-  operator,
-  partners,
-  status,
-  discovery_year,
-  onstream_date,
-  abandonment_date,
-  reservoir,
-  water_depth,
-  latitude,
-  longitude,
-  field_type
-) {
-  const [result] = await pool.query(
+export async function updateField(id, fieldData) {
+  const {
+    name,
+    region,
+    block = null,
+    operator,
+    partners = null,
+    status,
+    discovery_year,
+    onstream_date = null,
+    abandonment_date = null,
+    reservoir = null,
+    water_depth = null,
+    latitude,
+    longitude,
+    field_type,
+  } = fieldData;
+
+  await pool.query(
     `
     UPDATE fields
     SET name = ?, region = ?, block = ?, operator = ?, partners = ?, status = ?, discovery_year = ?, onstream_date = ?, abandonment_date = ?, reservoir = ?, water_depth = ?, latitude = ?, longitude = ?, field_type = ?
@@ -111,5 +110,12 @@ export async function updateField(
       id,
     ]
   );
+
   return getField(id);
+}
+
+// Delete Field by id
+export async function deleteField(id) {
+  const [result] = await pool.query("DELETE FROM fields WHERE id = ?", [id]);
+  return result;
 }
