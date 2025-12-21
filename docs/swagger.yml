@@ -2,13 +2,10 @@ openapi: 3.0.0
 info:
   title: Petroleum Fields API
   version: 1.0.0
-  description: REST API for managing petroleum field data
 servers:
   - url: http://localhost:8080/api
     description: Local API server
-tags:
-  - name: Fields
-    description: Operations for petroleum fields
+
 components:
   schemas:
     Field:
@@ -25,19 +22,18 @@ components:
           example: North Sea
         block:
           type: string
+          nullable: true
           example: 16/2-3
         operator:
           type: string
           example: Equinor
         partners:
-          type: array
-          items:
-            type: string
+          type: string
           nullable: true
-          example: [Aker BP, Petoro]
+          example: Aker BP, Petoro
         status:
           type: string
-          enum: [producing, planned, shut_down, abandoned]
+          enum: [producing, shut-in, development, abandoned]
           example: producing
         discovery_year:
           type: integer
@@ -45,7 +41,8 @@ components:
         onstream_date:
           type: string
           format: date
-          example: "2019-09-30"
+          nullable: true
+          example: 2019-09-30
         abandonment_date:
           type: string
           format: date
@@ -53,9 +50,11 @@ components:
           example: null
         reservoir:
           type: string
+          nullable: true
           example: Utsira High
         water_depth:
           type: number
+          nullable: true
           example: 115
         latitude:
           type: number
@@ -70,26 +69,28 @@ components:
       required:
         - name
         - region
-        - block
         - operator
         - status
         - discovery_year
-        - onstream_date
+        - latitude
+        - longitude
         - field_type
+
 paths:
   /fields:
     get:
       summary: Get all fields
       tags: [Fields]
       responses:
-        "200":
-          description: List of fields
+        200:
+          description: List of all fields
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Field"
+
     post:
       summary: Create a new field
       tags: [Fields]
@@ -100,8 +101,13 @@ paths:
             schema:
               $ref: "#/components/schemas/Field"
       responses:
-        "201":
+        201:
           description: Field created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+
   /fields/{id}:
     get:
       summary: Get a field by ID
@@ -113,14 +119,15 @@ paths:
           schema:
             type: integer
       responses:
-        "200":
-          description: Field found
+        200:
+          description: Field details
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Field"
-        "404":
+        404:
           description: Field not found
+
     put:
       summary: Update a field
       tags: [Fields]
@@ -137,8 +144,15 @@ paths:
             schema:
               $ref: "#/components/schemas/Field"
       responses:
-        "200":
+        200:
           description: Updated field
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        404:
+          description: Field not found
+
     delete:
       summary: Delete a field
       tags: [Fields]
@@ -149,5 +163,14 @@ paths:
           schema:
             type: integer
       responses:
-        "204":
+        200:
           description: Field deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        404:
+          description: Field not found
