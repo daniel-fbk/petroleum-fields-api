@@ -1,5 +1,5 @@
 import mysql from "mysql2";
-import appConfig from "../../config.js";
+import appConfig from "./config.js";
 
 const pool = mysql
   .createPool({
