@@ -11,88 +11,138 @@ components:
     Field:
       type: object
       properties:
-        id:
-          type: integer
-          example: 1
-        name:
-          type: string
-          example: Johan Sverdrup
-        region:
-          type: string
-          example: North Sea
-        block:
-          type: string
-          nullable: true
-          example: 16/2-3
-        operator:
-          type: string
-          example: Equinor
-        partners:
-          type: string
-          nullable: true
-          example: Aker BP, Petoro
-        status:
-          type: string
-          enum: [producing, shut-in, development, abandoned]
-          example: producing
-        discovery_year:
-          type: integer
-          example: 2010
-        onstream_date:
-          type: string
-          format: date
-          nullable: true
-          example: 2019-09-30
-        abandonment_date:
-          type: string
-          format: date
-          nullable: true
-          example: null
-        reservoir:
-          type: string
-          nullable: true
-          example: Utsira High
-        water_depth:
-          type: number
-          nullable: true
-          example: 115
-        latitude:
-          type: number
-          example: 59.5
-        longitude:
-          type: number
-          example: 3.5
-        field_type:
-          type: string
-          enum: [oil, gas, oil & gas]
-          example: oil & gas
-      required:
-        - name
-        - region
-        - operator
-        - status
-        - discovery_year
-        - latitude
-        - longitude
-        - field_type
+        id: { type: integer }
+        name: { type: string }
+        region: { type: string }
+        block: { type: string, nullable: true }
+        operator: { type: string }
+        partners: { type: string, nullable: true }
+        status: { type: string, enum: [producing, shut-in, development, abandoned] }
+        discovery_year: { type: integer }
+        onstream_date: { type: string, format: date, nullable: true }
+        abandonment_date: { type: string, format: date, nullable: true }
+        reservoir: { type: string, nullable: true }
+        water_depth: { type: number, nullable: true }
+        latitude: { type: number }
+        longitude: { type: number }
+        field_type: { type: string, enum: [oil, gas, oil & gas] }
 
+    Well:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        wellbore_id: { type: string, nullable: true }
+        field_id: { type: integer }
+        type_id: { type: integer }
+        status: { type: string, enum: [producing, shut-in, drilling, p&a] }
+        completion_type: { type: string, enum: [vertical, horizontal, multilateral], nullable: true }
+        spud_date: { type: string, format: date }
+        completion_date: { type: string, format: date, nullable: true }
+        latitude: { type: number }
+        longitude: { type: number }
+
+    WellType:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+
+    WellSpec:
+      type: object
+      properties:
+        id: { type: integer }
+        well_id: { type: integer }
+        total_depth: { type: number }
+        tvd: { type: number, nullable: true }
+        elevation_kb: { type: number, nullable: true }
+        elevation_seabed: { type: number, nullable: true }
+        tubing_size: { type: number }
+        casing_size: { type: number, nullable: true }
+        reservoir: { type: string, nullable: true }
+
+    Production:
+      type: object
+      properties:
+        id: { type: integer }
+        well_id: { type: integer }
+        production_date: { type: string, format: date }
+        oil_volume: { type: number }
+        gas_volume: { type: number }
+        watercut: { type: number }
+        water_volume: { type: number }
+        on_stream_hours: { type: number }
+        off_stream_hours: { type: number, nullable: true }
+        gas_flare: { type: number }
+        downhole_pressure: { type: number, nullable: true }
+        downhole_temp: { type: number, nullable: true }
+        wellhead_pressure: { type: number, nullable: true }
+        choke_pct: { type: number, nullable: true }
+
+    Incident:
+      type: object
+      properties:
+        id: { type: integer }
+        well_id: { type: integer }
+        incident_date: { type: string, format: date }
+        type: { type: string }
+        severity: { type: string, enum: [low, medium, high] }
+        status: { type: string, enum: [open, closed, investigating], nullable: true }
+        description: { type: string, nullable: true }
+        resolution_date: { type: string, format: date, nullable: true }
+        resolution_notes: { type: string, nullable: true }
+
+    FieldMetric:
+      type: object
+      properties:
+        id: { type: integer }
+        field_id: { type: integer }
+        year: { type: integer }
+        estimated_oil_reserves: { type: number, nullable: true }
+        estimated_gas_reserves: { type: number, nullable: true }
+        production_capacity_oil: { type: number, nullable: true }
+        production_capacity_gas: { type: number, nullable: true }
+
+    Equipment:
+      type: object
+      properties:
+        id: { type: integer }
+        well_id: { type: integer }
+        type: { type: string }
+        model: { type: string }
+        serial_number: { type: string }
+        install_date: { type: string, format: date, nullable: true }
+        last_maintenance: { type: string, format: date, nullable: true }
+        manufacturer: { type: string, nullable: true }
+        subsystem: { type: string, nullable: true }
+        status: { type: string, enum: [pending, operational, broken, maintenance] }
+
+    EquipmentMaintenance:
+      type: object
+      properties:
+        id: { type: integer }
+        equipment_id: { type: integer }
+        maintenance_date: { type: string, format: date }
+        notes: { type: string, nullable: true }
+
+# Paths (CRUD for each table)
 paths:
+  # Fields
   /fields:
     get:
       summary: Get all fields
       tags: [Fields]
       responses:
         200:
-          description: List of all fields
+          description: List of fields
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Field"
-
     post:
-      summary: Create a new field
+      summary: Create a field
       tags: [Fields]
       requestBody:
         required: true
@@ -116,8 +166,7 @@ paths:
         - in: path
           name: id
           required: true
-          schema:
-            type: integer
+          schema: { type: integer }
       responses:
         200:
           description: Field details
@@ -127,10 +176,193 @@ paths:
                 $ref: "#/components/schemas/Field"
         404:
           description: Field not found
-
     put:
       summary: Update a field
       tags: [Fields]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Field"
+      responses:
+        200:
+          description: Field updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Field"
+        404:
+          description: Field not found
+    delete:
+      summary: Delete a field
+      tags: [Fields]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        200:
+          description: Field deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+        404:
+          description: Field not found
+
+  # Wells
+  /wells:
+    get:
+      summary: Get all wells
+      tags: [Wells]
+      responses:
+        200:
+          description: List of wells
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Well"
+    post:
+      summary: Create a well
+      tags: [Wells]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Well"
+      responses:
+        201:
+          description: Well created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Well"
+
+  /wells/{id}:
+    get:
+      summary: Get a well by ID
+      tags: [Wells]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        200:
+          description: Well details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Well"
+        404:
+          description: Well not found
+    put:
+      summary: Update a well
+      tags: [Wells]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Well"
+      responses:
+        200:
+          description: Well updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Well"
+        404:
+          description: Well not found
+    delete:
+      summary: Delete a well
+      tags: [Wells]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        200:
+          description: Well deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string }
+        404:
+          description: Well not found
+  # WellTypes
+  /well_types:
+    get:
+      summary: Get all well types
+      tags: [WellTypes]
+      responses:
+        200:
+          description: List of well types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WellType"
+    post:
+      summary: Create a new well type
+      tags: [WellTypes]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WellType"
+      responses:
+        201:
+          description: Well type created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WellType"
+
+  /well_types/{id}:
+    get:
+      summary: Get a well type by ID
+      tags: [WellTypes]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Well type details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WellType"
+        404:
+          description: Well type not found
+    put:
+      summary: Update a well type
+      tags: [WellTypes]
       parameters:
         - in: path
           name: id
@@ -142,20 +374,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Field"
+              $ref: "#/components/schemas/WellType"
       responses:
         200:
-          description: Updated field
+          description: Well type updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Field"
+                $ref: "#/components/schemas/WellType"
         404:
-          description: Field not found
-
+          description: Well type not found
     delete:
-      summary: Delete a field
-      tags: [Fields]
+      summary: Delete a well type
+      tags: [WellTypes]
       parameters:
         - in: path
           name: id
@@ -164,13 +395,540 @@ paths:
             type: integer
       responses:
         200:
-          description: Field deleted
+          description: Well type deleted
+        404:
+          description: Well type not found
+
+  # WellSpecs
+  /well_specs:
+    get:
+      summary: Get all well specifications
+      tags: [WellSpecs]
+      responses:
+        200:
+          description: List of well specifications
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  message:
-                    type: string
+                type: array
+                items:
+                  $ref: "#/components/schemas/WellSpec"
+    post:
+      summary: Create a new well specification
+      tags: [WellSpecs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WellSpec"
+      responses:
+        201:
+          description: Well specification created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WellSpec"
+
+  /well_specs/{id}:
+    get:
+      summary: Get a well specification by ID
+      tags: [WellSpecs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Well specification details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WellSpec"
         404:
-          description: Field not found
+          description: Well specification not found
+    put:
+      summary: Update a well specification
+      tags: [WellSpecs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WellSpec"
+      responses:
+        200:
+          description: Well specification updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WellSpec"
+        404:
+          description: Well specification not found
+    delete:
+      summary: Delete a well specification
+      tags: [WellSpecs]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Well specification deleted
+        404:
+          description: Well specification not found
+
+  # Production
+  /production:
+    get:
+      summary: Get all production entries
+      tags: [Production]
+      responses:
+        200:
+          description: List of production entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Production"
+    post:
+      summary: Create a new production entry
+      tags: [Production]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Production"
+      responses:
+        201:
+          description: Production entry created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Production"
+
+  /production/{id}:
+    get:
+      summary: Get a production entry by ID
+      tags: [Production]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Production entry details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Production"
+        404:
+          description: Production entry not found
+    put:
+      summary: Update a production entry
+      tags: [Production]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Production"
+      responses:
+        200:
+          description: Production entry updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Production"
+        404:
+          description: Production entry not found
+    delete:
+      summary: Delete a production entry
+      tags: [Production]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Production entry deleted
+        404:
+          description: Production entry not found
+
+  # Incidents
+  /incidents:
+    get:
+      summary: Get all incidents
+      tags: [Incidents]
+      responses:
+        200:
+          description: List of incidents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Incident"
+    post:
+      summary: Create a new incident
+      tags: [Incidents]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Incident"
+      responses:
+        201:
+          description: Incident created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+
+  /incidents/{id}:
+    get:
+      summary: Get an incident by ID
+      tags: [Incidents]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Incident details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+        404:
+          description: Incident not found
+    put:
+      summary: Update an incident
+      tags: [Incidents]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Incident"
+      responses:
+        200:
+          description: Incident updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Incident"
+        404:
+          description: Incident not found
+    delete:
+      summary: Delete an incident
+      tags: [Incidents]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Incident deleted
+        404:
+          description: Incident not found
+
+  # FieldMetrics
+  /field_metrics:
+    get:
+      summary: Get all field metrics
+      tags: [FieldMetrics]
+      responses:
+        200:
+          description: List of field metrics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FieldMetric"
+    post:
+      summary: Create a new field metric
+      tags: [FieldMetrics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FieldMetric"
+      responses:
+        201:
+          description: Field metric created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldMetric"
+
+  /field_metrics/{id}:
+    get:
+      summary: Get a field metric by ID
+      tags: [FieldMetrics]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Field metric details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldMetric"
+        404:
+          description: Field metric not found
+    put:
+      summary: Update a field metric
+      tags: [FieldMetrics]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FieldMetric"
+      responses:
+        200:
+          description: Field metric updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldMetric"
+        404:
+          description: Field metric not found
+    delete:
+      summary: Delete a field metric
+      tags: [FieldMetrics]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Field metric deleted
+        404:
+          description: Field metric not found
+
+  # Equipment
+  /equipment:
+    get:
+      summary: Get all equipment
+      tags: [Equipment]
+      responses:
+        200:
+          description: List of equipment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Equipment"
+    post:
+      summary: Create a new equipment
+      tags: [Equipment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Equipment"
+      responses:
+        201:
+          description: Equipment created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+
+  /equipment/{id}:
+    get:
+      summary: Get an equipment by ID
+      tags: [Equipment]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Equipment details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        404:
+          description: Equipment not found
+    put:
+      summary: Update an equipment
+      tags: [Equipment]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Equipment"
+      responses:
+        200:
+          description: Equipment updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        404:
+          description: Equipment not found
+    delete:
+      summary: Delete an equipment
+      tags: [Equipment]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Equipment deleted
+        404:
+          description: Equipment not found
+
+  # EquipmentMaintenance
+  /equipment_maintenance:
+    get:
+      summary: Get all maintenance records
+      tags: [EquipmentMaintenance]
+      responses:
+        200:
+          description: List of maintenance records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EquipmentMaintenance"
+    post:
+      summary: Create a new maintenance record
+      tags: [EquipmentMaintenance]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipmentMaintenance"
+      responses:
+        201:
+          description: Maintenance record created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentMaintenance"
+
+  /equipment_maintenance/{id}:
+    get:
+      summary: Get a maintenance record by ID
+      tags: [EquipmentMaintenance]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Maintenance record details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentMaintenance"
+        404:
+          description: Maintenance record not found
+    put:
+      summary: Update a maintenance record
+      tags: [EquipmentMaintenance]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EquipmentMaintenance"
+      responses:
+        200:
+          description: Maintenance record updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EquipmentMaintenance"
+        404:
+          description: Maintenance record not found
+    delete:
+      summary: Delete a maintenance record
+      tags: [EquipmentMaintenance]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Maintenance record deleted
+        404:
+          description: Maintenance record not found
