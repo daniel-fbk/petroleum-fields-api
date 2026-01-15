@@ -1,17 +1,25 @@
-import * as fieldMetricsService from "../services/fieldMetrics.service.js";
+import {
+  createFieldMetricService,
+  deleteFieldMetricService,
+  getFieldMetricService,
+  getFieldMetricsService,
+  updateFieldMetricService,
+} from "../services/fieldMetrics.service.js";
 
-export const getFieldMetrics = async (req, res, next) => {
+// Get all Field Metric records
+export const getFieldMetricsController = async (req, res, next) => {
   try {
-    const list = await fieldMetricsService.getFieldMetricsList();
+    const list = await getFieldMetricsService();
     res.json(list);
   } catch (err) {
     next(err);
   }
 };
 
-export const getFieldMetric = async (req, res, next) => {
+// Get a single Field Metric record
+export const getFieldMetricController = async (req, res, next) => {
   try {
-    const metric = await fieldMetricsService.getFieldMetricById(req.params.id);
+    const metric = await getFieldMetricService(req.params.id);
     if (!metric) {
       const err = new Error(`Field metric with id ${req.params.id} not found`);
       err.status = 404;
@@ -23,18 +31,20 @@ export const getFieldMetric = async (req, res, next) => {
   }
 };
 
-export const createFieldMetric = async (req, res, next) => {
+// Create a new Field Metric record
+export const createFieldMetricController = async (req, res, next) => {
   try {
-    const metric = await fieldMetricsService.createFieldMetricEntry(req.body);
+    const metric = await createFieldMetricService(req.body);
     res.status(201).json(metric);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateFieldMetric = async (req, res, next) => {
+// Update an exisiting Field Metric record
+export const updateFieldMetricController = async (req, res, next) => {
   try {
-    const updated = await fieldMetricsService.updateFieldMetricEntry(req.params.id, req.body);
+    const updated = await updateFieldMetricService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Field metric with id ${req.params.id} not found`);
       err.status = 404;
@@ -46,9 +56,10 @@ export const updateFieldMetric = async (req, res, next) => {
   }
 };
 
-export const deleteFieldMetric = async (req, res, next) => {
+// Delete a Field Metric record
+export const deleteFieldMetricController = async (req, res, next) => {
   try {
-    const result = await fieldMetricsService.deleteFieldMetricEntry(req.params.id);
+    const result = await deleteFieldMetricService(req.params.id);
     if (result.affectedRows === 0) {
       const err = new Error(`Field metric with id ${req.params.id} not found`);
       err.status = 404;

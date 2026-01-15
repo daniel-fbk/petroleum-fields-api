@@ -1,9 +1,15 @@
-import * as wellsService from "../services/wells.service.js";
+import {
+  createWellService,
+  deleteWellService,
+  getWellService,
+  getWellsService,
+  updateWellService,
+} from "../services/wells.service.js";
 
 // Get all wells
-export const getWells = async (req, res, next) => {
+export const getWellsController = async (req, res, next) => {
   try {
-    const wells = await wellsService.listWells();
+    const wells = await getWellsService();
     res.json(wells);
   } catch (err) {
     next(err);
@@ -11,9 +17,9 @@ export const getWells = async (req, res, next) => {
 };
 
 // Get a single well by ID
-export const getWell = async (req, res, next) => {
+export const getWellController = async (req, res, next) => {
   try {
-    const well = await wellsService.getWellById(req.params.id);
+    const well = await getWellService(req.params.id);
     if (!well) {
       const err = new Error(`Well with id ${req.params.id} not found`);
       err.status = 404;
@@ -26,9 +32,9 @@ export const getWell = async (req, res, next) => {
 };
 
 // Create a new well
-export const createWell = async (req, res, next) => {
+export const createWellController = async (req, res, next) => {
   try {
-    const well = await wellsService.createNewWell(req.body);
+    const well = await createWellService(req.body);
     res.status(201).json(well);
   } catch (err) {
     next(err);
@@ -36,9 +42,9 @@ export const createWell = async (req, res, next) => {
 };
 
 // Update an existing well
-export const updateWell = async (req, res, next) => {
+export const updateWellController = async (req, res, next) => {
   try {
-    const updated = await wellsService.updateWellById(req.params.id, req.body);
+    const updated = await updateWellService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Well with id ${req.params.id} not found`);
       err.status = 404;
@@ -51,9 +57,9 @@ export const updateWell = async (req, res, next) => {
 };
 
 // Delete a well
-export const deleteWell = async (req, res, next) => {
+export const deleteWellController = async (req, res, next) => {
   try {
-    const result = await wellsService.deleteWellById(req.params.id);
+    const result = await deleteWellService(req.params.id);
     if (!result || result.affectedRows === 0) {
       const err = new Error(`Well with id ${req.params.id} not found`);
       err.status = 404;

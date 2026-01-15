@@ -1,17 +1,25 @@
-import * as productionService from "../services/production.service.js";
+import {
+  createProductionService,
+  deleteProductionService,
+  getProductionService,
+  getProductionsService,
+  updateProductionService,
+} from "../services/production.service.js";
 
-export const getProduction = async (req, res, next) => {
+// Get all Production entries
+export const getProductionsController = async (req, res, next) => {
   try {
-    const list = await productionService.getProductionList();
+    const list = await getProductionsService();
     res.json(list);
   } catch (err) {
     next(err);
   }
 };
 
-export const getProductionEntry = async (req, res, next) => {
+// Get a Production entry by ID
+export const getProductionController = async (req, res, next) => {
   try {
-    const entry = await productionService.getProductionById(req.params.id);
+    const entry = await getProductionService(req.params.id);
     if (!entry) {
       const err = new Error(`Production entry with id ${req.params.id} not found`);
       err.status = 404;
@@ -23,18 +31,20 @@ export const getProductionEntry = async (req, res, next) => {
   }
 };
 
-export const createProductionEntry = async (req, res, next) => {
+// Create a new Production entry
+export const createProductionController = async (req, res, next) => {
   try {
-    const entry = await productionService.createProductionEntry(req.body);
+    const entry = await createProductionService(req.body);
     res.status(201).json(entry);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateProductionEntry = async (req, res, next) => {
+// Update an existing Production entry
+export const updateProductionController = async (req, res, next) => {
   try {
-    const updated = await productionService.updateProductionEntry(req.params.id, req.body);
+    const updated = await updateProductionService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Production entry with id ${req.params.id} not found`);
       err.status = 404;
@@ -46,9 +56,10 @@ export const updateProductionEntry = async (req, res, next) => {
   }
 };
 
-export const deleteProductionEntry = async (req, res, next) => {
+// Delete a Production entry
+export const deleteProductionController = async (req, res, next) => {
   try {
-    const result = await productionService.deleteProductionEntry(req.params.id);
+    const result = await deleteProductionService(req.params.id);
     if (result.affectedRows === 0) {
       const err = new Error(`Production entry with id ${req.params.id} not found`);
       err.status = 404;

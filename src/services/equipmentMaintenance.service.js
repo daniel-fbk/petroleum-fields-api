@@ -1,7 +1,27 @@
-import * as equipmentMaintenanceModel from "../models/equipmentMaintenance.model.js";
+import {
+  createMaintenanceModel,
+  deleteMaintenanceModel,
+  getMaintenanceModel,
+  getMaintenancesModel,
+  updateMaintenanceModel,
+} from "../models/equipmentMaintenance.model.js";
 
-export const getMaintenanceList = async () => equipmentMaintenanceModel.getMaintenanceList();
-export const getMaintenanceById = async (id) => equipmentMaintenanceModel.getMaintenanceById(id);
-export const createMaintenance = async (data) => equipmentMaintenanceModel.createMaintenance(data);
-export const updateMaintenance = async (id, data) => equipmentMaintenanceModel.updateMaintenance(id, data);
-export const deleteMaintenance = async (id) => equipmentMaintenanceModel.deleteMaintenance(id);
+export async function getMaintenancesService() {
+  return getMaintenancesModel();
+}
+
+export async function getMaintenanceService(id) {
+  return getMaintenanceModel(id);
+}
+
+export async function createMaintenanceService(data) {
+  return createMaintenanceModel(data);
+}
+
+export async function updateMaintenanceService(id, data) {
+  return updateMaintenanceModel(id, data);
+}
+
+export async function deleteMaintenanceService(id) {
+  return deleteMaintenanceModel(id);
+}

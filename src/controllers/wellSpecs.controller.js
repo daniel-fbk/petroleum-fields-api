@@ -1,17 +1,25 @@
-import * as wellSpecsService from "../services/wellSpecs.service.js";
+import {
+  createWellSpecService,
+  deleteWellSpecService,
+  getWellSpecService,
+  getWellSpecsService,
+  updateWellSpecService,
+} from "../services/wellSpecs.service.js";
 
-export const getWellSpecs = async (req, res, next) => {
+// Get all Well Specs entries
+export const getWellSpecsController = async (req, res, next) => {
   try {
-    const specs = await wellSpecsService.listWellSpecs();
+    const specs = await getWellSpecsService();
     res.json(specs);
   } catch (err) {
     next(err);
   }
 };
 
-export const getWellSpec = async (req, res, next) => {
+// Get a Well Spec entry by ID
+export const getWellSpecController = async (req, res, next) => {
   try {
-    const spec = await wellSpecsService.getWellSpecById(req.params.id);
+    const spec = await getWellSpecService(req.params.id);
     if (!spec) {
       const err = new Error(`Well spec with id ${req.params.id} not found`);
       err.status = 404;
@@ -23,18 +31,20 @@ export const getWellSpec = async (req, res, next) => {
   }
 };
 
-export const createWellSpec = async (req, res, next) => {
+// Create a new Well Spec
+export const createWellSpecController = async (req, res, next) => {
   try {
-    const spec = await wellSpecsService.createNewWellSpec(req.body);
+    const spec = await createWellSpecService(req.body);
     res.status(201).json(spec);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateWellSpec = async (req, res, next) => {
+// Update an existing Well Spec entry
+export const updateWellSpecController = async (req, res, next) => {
   try {
-    const updated = await wellSpecsService.updateWellSpecById(req.params.id, req.body);
+    const updated = await updateWellSpecService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Well spec with id ${req.params.id} not found`);
       err.status = 404;
@@ -46,9 +56,10 @@ export const updateWellSpec = async (req, res, next) => {
   }
 };
 
-export const deleteWellSpec = async (req, res, next) => {
+// Delete a Well Spec entry
+export const deleteWellSpecController = async (req, res, next) => {
   try {
-    const result = await wellSpecsService.deleteWellSpecById(req.params.id);
+    const result = await deleteWellSpecService(req.params.id);
     if (!result || result.affectedRows === 0) {
       const err = new Error(`Well spec with id ${req.params.id} not found`);
       err.status = 404;

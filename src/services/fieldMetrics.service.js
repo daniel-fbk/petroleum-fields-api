@@ -1,7 +1,27 @@
-import * as fieldMetricsModel from "../models/fieldMetrics.model.js";
+import {
+  createFieldMetricModel,
+  deleteFieldMetricModel,
+  getFieldMetricModel,
+  getFieldMetricsModel,
+  updateFieldMetricModel,
+} from "../models/fieldMetrics.model.js";
 
-export const getFieldMetricsList = () => fieldMetricsModel.getFieldMetrics();
-export const getFieldMetricById = (id) => fieldMetricsModel.getFieldMetric(id);
-export const createFieldMetricEntry = (data) => fieldMetricsModel.createFieldMetric(data);
-export const updateFieldMetricEntry = (id, data) => fieldMetricsModel.updateFieldMetric(id, data);
-export const deleteFieldMetricEntry = (id) => fieldMetricsModel.deleteFieldMetric(id);
+export async function getFieldMetricsService() {
+  return getFieldMetricsModel();
+}
+
+export async function getFieldMetricService(id) {
+  return getFieldMetricModel(id);
+}
+
+export async function createFieldMetricService(data) {
+  return createFieldMetricModel(data);
+}
+
+export async function updateFieldMetricService(id, data) {
+  return updateFieldMetricModel(id, data);
+}
+
+export async function deleteFieldMetricService(id) {
+  return deleteFieldMetricModel(id);
+}

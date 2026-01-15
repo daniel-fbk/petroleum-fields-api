@@ -1,21 +1,27 @@
-import * as fieldsModel from "../models/fields.model.js";
+import {
+  createFieldModel,
+  deleteFieldModel,
+  getFieldModel,
+  getFieldsModel,
+  updateFieldModel,
+} from "../models/fields.model.js";
 
-export async function listFields() {
-  return fieldsModel.getFields();
+export async function getFieldsService() {
+  return getFieldsModel();
 }
 
-export async function getFieldById(id) {
-  return fieldsModel.getField(id);
+export async function getFieldService(id) {
+  return getFieldModel(id);
 }
 
-export async function createNewField(data) {
-  return fieldsModel.createField(data);
+export async function createFieldService(data) {
+  return createFieldModel(data);
 }
 
-export async function updateFieldById(id, data) {
-  return fieldsModel.updateField(id, data);
+export async function updateFieldService(id, data) {
+  return updateFieldModel(id, data);
 }
 
-export async function deleteFieldById(id) {
-  return fieldsModel.deleteField(id);
+export async function deleteFieldService(id) {
+  return deleteFieldModel(id);
 }

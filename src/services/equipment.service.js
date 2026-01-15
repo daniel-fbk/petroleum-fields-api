@@ -1,7 +1,27 @@
-import * as equipmentModel from "../models/equipment.model.js";
+import {
+  createEquipmentModel,
+  deleteEquipmentModel,
+  getEquipmentModel,
+  getEquipmentsModel,
+  updateEquipmentModel,
+} from "../models/equipment.model.js";
 
-export const getEquipmentList = async () => equipmentModel.getEquipmentList();
-export const getEquipmentById = async (id) => equipmentModel.getEquipmentById(id);
-export const createEquipment = async (data) => equipmentModel.createEquipment(data);
-export const updateEquipment = async (id, data) => equipmentModel.updateEquipment(id, data);
-export const deleteEquipment = async (id) => equipmentModel.deleteEquipment(id);
+export async function getEquipmentsService() {
+  return getEquipmentsModel();
+}
+
+export async function getEquipmentService(id) {
+  return getEquipmentModel(id);
+}
+
+export async function createEquipmentService(data) {
+  return createEquipmentModel(data);
+}
+
+export async function updateEquipmentService(id, data) {
+  return updateEquipmentModel(id, data);
+}
+
+export async function deleteEquipmentService(id) {
+  return deleteEquipmentModel(id);
+}

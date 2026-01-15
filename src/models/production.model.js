@@ -1,29 +1,31 @@
 import pool from "../config/database.js";
 
-// Get all production entries
-export async function getProductionList() {
-  const [rows] = await pool.query(`
-    SELECT *
-    FROM production
-  `);
-  return rows;
-}
-
-// Get a single production entry by id
-export async function getProductionById(id) {
+// Get production entries
+export async function getProductionsModel() {
   const [rows] = await pool.query(
     `
     SELECT *
-    FROM production
-    WHERE id = ?
-  `,
+      FROM production
+    `
+  );
+  return rows;
+}
+
+// Get production entry by id
+export async function getProductionModel(id) {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+      FROM production
+      WHERE id = ?
+    `,
     [id]
   );
   return rows[0];
 }
 
 // Create production entry
-export async function createProductionEntry(data) {
+export async function createProductionModel(data) {
   const {
     well_id,
     production_date,
@@ -45,7 +47,7 @@ export async function createProductionEntry(data) {
     INSERT INTO production
       (well_id, production_date, oil_volume, gas_volume, watercut, water_volume, on_stream_hours, off_stream_hours, gas_flare, downhole_pressure, downhole_temp, wellhead_pressure, choke_pct)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `,
+    `,
     [
       well_id,
       production_date,
@@ -63,11 +65,11 @@ export async function createProductionEntry(data) {
     ]
   );
 
-  return getProductionById(result.insertId);
+  return getProductionModel(result.insertId);
 }
 
 // Update production entry
-export async function updateProductionEntry(id, data) {
+export async function updateProductionModel(id, data) {
   const {
     well_id,
     production_date,
@@ -88,8 +90,8 @@ export async function updateProductionEntry(id, data) {
     `
     UPDATE production
     SET well_id = ?, production_date = ?, oil_volume = ?, gas_volume = ?, watercut = ?, water_volume = ?, on_stream_hours = ?, off_stream_hours = ?, gas_flare = ?, downhole_pressure = ?, downhole_temp = ?, wellhead_pressure = ?, choke_pct = ?
-    WHERE id = ?
-  `,
+      WHERE id = ?
+    `,
     [
       well_id,
       production_date,
@@ -108,16 +110,16 @@ export async function updateProductionEntry(id, data) {
     ]
   );
 
-  return getProductionById(id);
+  return getProductionModel(id);
 }
 
-// Delete production entry
-export async function deleteProductionEntry(id) {
+// Delete production entry by id
+export async function deleteProductionModel(id) {
   const [result] = await pool.query(
     `
     DELETE FROM production
-    WHERE id = ?
-  `,
+      WHERE id = ?
+    `,
     [id]
   );
   return result;

@@ -1,29 +1,31 @@
 import pool from "../config/database.js";
 
-// Get all Well Specs
-export async function getWellSpecs() {
-  const [rows] = await pool.query(`
+// Get Well Specs
+export async function getWellSpecsModel() {
+  const [rows] = await pool.query(
+    `
     SELECT *
-    FROM well_specs
-  `);
+      FROM well_specs
+   `
+  );
   return rows;
 }
 
 // Get Well Spec by id
-export async function getWellSpec(id) {
+export async function getWellSpecModel(id) {
   const [rows] = await pool.query(
     `
     SELECT *
-    FROM well_specs
-    WHERE id = ?
-  `,
+      FROM well_specs
+      WHERE id = ?
+   `,
     [id]
   );
   return rows[0];
 }
 
 // Create Well Spec
-export async function createWellSpec(data) {
+export async function createWellSpecModel(data) {
   const { well_id, total_depth, tvd, elevation_kb, elevation_seabed, tubing_size, casing_size, reservoir } = data;
 
   const [result] = await pool.query(
@@ -31,36 +33,36 @@ export async function createWellSpec(data) {
     INSERT INTO well_specs
       (well_id, total_depth, tvd, elevation_kb, elevation_seabed, tubing_size, casing_size, reservoir)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `,
+   `,
     [well_id, total_depth, tvd, elevation_kb, elevation_seabed, tubing_size, casing_size, reservoir]
   );
 
-  return getWellSpec(result.insertId);
+  return getWellSpecModel(result.insertId);
 }
 
 // Update Well Spec
-export async function updateWellSpec(id, data) {
+export async function updateWellSpecModel(id, data) {
   const { well_id, total_depth, tvd, elevation_kb, elevation_seabed, tubing_size, casing_size, reservoir } = data;
 
   await pool.query(
     `
     UPDATE well_specs
     SET well_id = ?, total_depth = ?, tvd = ?, elevation_kb = ?, elevation_seabed = ?, tubing_size = ?, casing_size = ?, reservoir = ?
-    WHERE id = ?
-  `,
+      WHERE id = ?
+   `,
     [well_id, total_depth, tvd, elevation_kb, elevation_seabed, tubing_size, casing_size, reservoir, id]
   );
 
-  return getWellSpec(id);
+  return getWellSpecModel(id);
 }
 
 // Delete Well Spec by id
-export async function deleteWellSpec(id) {
+export async function deleteWellSpecModel(id) {
   const [result] = await pool.query(
     `
     DELETE FROM well_specs
-    WHERE id = ?
-  `,
+      WHERE id = ?
+    `,
     [id]
   );
   return result;

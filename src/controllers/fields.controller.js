@@ -1,9 +1,15 @@
-import * as fieldsService from "../services/fields.service.js";
+import {
+  createFieldService,
+  deleteFieldService,
+  getFieldService,
+  getFieldsService,
+  updateFieldService,
+} from "../services/fields.service.js";
 
 // Get all fields
-export const getFields = async (req, res, next) => {
+export const getFieldsController = async (req, res, next) => {
   try {
-    const fields = await fieldsService.listFields();
+    const fields = await getFieldsService();
     res.json(fields);
   } catch (err) {
     next(err);
@@ -11,9 +17,9 @@ export const getFields = async (req, res, next) => {
 };
 
 // Get a single field by ID
-export const getField = async (req, res, next) => {
+export const getFieldController = async (req, res, next) => {
   try {
-    const field = await fieldsService.getFieldById(req.params.id);
+    const field = await getFieldService(req.params.id);
     if (!field) {
       const err = new Error(`Field with id ${req.params.id} not found`);
       err.status = 404;
@@ -26,9 +32,9 @@ export const getField = async (req, res, next) => {
 };
 
 // Create a new field
-export const createField = async (req, res, next) => {
+export const createFieldController = async (req, res, next) => {
   try {
-    const field = await fieldsService.createNewField(req.body);
+    const field = await createFieldService(req.body);
     res.status(201).json(field);
   } catch (err) {
     next(err);
@@ -36,9 +42,9 @@ export const createField = async (req, res, next) => {
 };
 
 // Update an existing field
-export const updateField = async (req, res, next) => {
+export const updateFieldController = async (req, res, next) => {
   try {
-    const updatedField = await fieldsService.updateFieldById(req.params.id, req.body);
+    const updatedField = await updateFieldService(req.params.id, req.body);
     if (!updatedField) {
       const err = new Error(`Field with id ${req.params.id} not found`);
       err.status = 404;
@@ -51,9 +57,9 @@ export const updateField = async (req, res, next) => {
 };
 
 // Delete a field
-export const deleteField = async (req, res, next) => {
+export const deleteFieldController = async (req, res, next) => {
   try {
-    const result = await fieldsService.deleteFieldById(req.params.id);
+    const result = await deleteFieldService(req.params.id);
     if (!result || result.affectedRows === 0) {
       const err = new Error(`Field with id ${req.params.id} not found`);
       err.status = 404;

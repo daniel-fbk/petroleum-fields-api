@@ -1,18 +1,23 @@
 import pool from "../config/database.js";
 
 // Get Fields
-export async function getFields() {
-  const [rows] = await pool.query("SELECT * FROM fields");
+export async function getFieldsModel() {
+  const [rows] = await pool.query(
+    `
+    SELECT *
+      FROM fields
+    `
+  );
   return rows;
 }
 
 // Get Field by id
-export async function getField(id) {
+export async function getFieldModel(id) {
   const [rows] = await pool.query(
     `
     SELECT *
-    FROM fields
-    WHERE id = ?
+      FROM fields
+      WHERE id = ?
     `,
     [id]
   );
@@ -20,7 +25,7 @@ export async function getField(id) {
 }
 
 // Create Field
-export async function createField(fieldData) {
+export async function createFieldModel(fieldData) {
   const {
     name,
     region,
@@ -64,11 +69,11 @@ export async function createField(fieldData) {
   );
 
   const id = result.insertId;
-  return getField(id);
+  return getFieldModel(id);
 }
 
 // Update Field
-export async function updateField(id, fieldData) {
+export async function updateFieldModel(id, fieldData) {
   const {
     name,
     region,
@@ -90,7 +95,7 @@ export async function updateField(id, fieldData) {
     `
     UPDATE fields
     SET name = ?, region = ?, block = ?, operator = ?, partners = ?, status = ?, discovery_year = ?, onstream_date = ?, abandonment_date = ?, reservoir = ?, water_depth = ?, latitude = ?, longitude = ?, field_type = ?
-    WHERE id = ?
+      WHERE id = ?
     `,
     [
       name,
@@ -111,11 +116,17 @@ export async function updateField(id, fieldData) {
     ]
   );
 
-  return getField(id);
+  return getFieldModel(id);
 }
 
 // Delete Field by id
-export async function deleteField(id) {
-  const [result] = await pool.query("DELETE FROM fields WHERE id = ?", [id]);
+export async function deleteFieldModel(id) {
+  const [result] = await pool.query(
+    `
+    DELETE FROM fields
+      WHERE id = ?
+    `,
+    [id]
+  );
   return result;
 }

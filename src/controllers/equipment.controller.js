@@ -1,17 +1,25 @@
-import * as equipmentService from "../services/equipment.service.js";
+import {
+  createEquipmentService,
+  deleteEquipmentService,
+  getEquipmentService,
+  getEquipmentsService,
+  updateEquipmentService,
+} from "../services/equipment.service.js";
 
-export const getEquipmentList = async (req, res, next) => {
+// Get all equipments
+export const getEquipmentsController = async (req, res, next) => {
   try {
-    const list = await equipmentService.getEquipmentList();
+    const list = await getEquipmentsService();
     res.json(list);
   } catch (err) {
     next(err);
   }
 };
 
-export const getEquipment = async (req, res, next) => {
+// Get a single equipment by ID
+export const getEquipmentController = async (req, res, next) => {
   try {
-    const equipment = await equipmentService.getEquipmentById(req.params.id);
+    const equipment = await getEquipmentService(req.params.id);
     if (!equipment) {
       const err = new Error(`Equipment with id ${req.params.id} not found`);
       err.status = 404;
@@ -23,18 +31,20 @@ export const getEquipment = async (req, res, next) => {
   }
 };
 
-export const createEquipment = async (req, res, next) => {
+// Create a new equipment
+export const createEquipmentController = async (req, res, next) => {
   try {
-    const equipment = await equipmentService.createEquipment(req.body);
+    const equipment = await createEquipmentService(req.body);
     res.status(201).json(equipment);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateEquipment = async (req, res, next) => {
+// Update an existing equipment
+export const updateEquipmentController = async (req, res, next) => {
   try {
-    const updated = await equipmentService.updateEquipment(req.params.id, req.body);
+    const updated = await updateEquipmentService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Equipment with id ${req.params.id} not found`);
       err.status = 404;
@@ -46,9 +56,10 @@ export const updateEquipment = async (req, res, next) => {
   }
 };
 
-export const deleteEquipment = async (req, res, next) => {
+// Delete an equipment
+export const deleteEquipmentController = async (req, res, next) => {
   try {
-    const result = await equipmentService.deleteEquipment(req.params.id);
+    const result = await deleteEquipmentService(req.params.id);
     if (result.affectedRows === 0) {
       const err = new Error(`Equipment with id ${req.params.id} not found`);
       err.status = 404;

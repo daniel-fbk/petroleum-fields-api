@@ -1,7 +1,27 @@
-import * as incidentsModel from "../models/incidents.model.js";
+import {
+  createIncidentModel,
+  deleteIncidentModel,
+  getIncidentModel,
+  getIncidentsModel,
+  updateIncidentModel,
+} from "../models/incidents.model.js";
 
-export const getIncidentsList = async () => incidentsModel.getIncidents();
-export const getIncidentById = async (id) => incidentsModel.getIncident(id);
-export const createIncidentEntry = async (data) => incidentsModel.createIncident(data);
-export const updateIncidentEntry = async (id, data) => incidentsModel.updateIncident(id, data);
-export const deleteIncidentEntry = async (id) => incidentsModel.deleteIncident(id);
+export async function getIncidentsService() {
+  return getIncidentsModel();
+}
+
+export async function getIncidentService(id) {
+  return getIncidentModel(id);
+}
+
+export async function createIncidentService(data) {
+  return createIncidentModel(data);
+}
+
+export async function updateIncidentService(id, data) {
+  updateIncidentModel(id, data);
+}
+
+export async function deleteIncidentService(id) {
+  deleteIncidentModel(id);
+}

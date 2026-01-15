@@ -1,29 +1,31 @@
 import pool from "../config/database.js";
 
-// Get all field metrics
-export async function getFieldMetrics() {
-  const [rows] = await pool.query(`
+// Get field metrics
+export async function getFieldMetricsModel() {
+  const [rows] = await pool.query(
+    `
     SELECT *
-    FROM field_metrics
-  `);
+      FROM field_metrics
+    `
+  );
   return rows;
 }
 
 // Get field metric by id
-export async function getFieldMetric(id) {
+export async function getFieldMetricModel(id) {
   const [rows] = await pool.query(
     `
     SELECT *
-    FROM field_metrics
-    WHERE id = ?
-  `,
+      FROM field_metrics
+      WHERE id = ?
+    `,
     [id]
   );
   return rows[0];
 }
 
 // Create field metric
-export async function createFieldMetric(data) {
+export async function createFieldMetricModel(data) {
   const {
     field_id,
     year,
@@ -38,15 +40,15 @@ export async function createFieldMetric(data) {
     INSERT INTO field_metrics
       (field_id, year, estimated_oil_reserves, estimated_gas_reserves, production_capacity_oil, production_capacity_gas)
     VALUES (?, ?, ?, ?, ?, ?)
-  `,
+    `,
     [field_id, year, estimated_oil_reserves, estimated_gas_reserves, production_capacity_oil, production_capacity_gas]
   );
 
-  return getFieldMetric(result.insertId);
+  return getFieldMetricModel(result.insertId);
 }
 
 // Update field metric
-export async function updateFieldMetric(id, data) {
+export async function updateFieldMetricModel(id, data) {
   const {
     field_id,
     year,
@@ -60,8 +62,8 @@ export async function updateFieldMetric(id, data) {
     `
     UPDATE field_metrics
     SET field_id = ?, year = ?, estimated_oil_reserves = ?, estimated_gas_reserves = ?, production_capacity_oil = ?, production_capacity_gas = ?
-    WHERE id = ?
-  `,
+      WHERE id = ?
+    `,
     [
       field_id,
       year,
@@ -73,16 +75,16 @@ export async function updateFieldMetric(id, data) {
     ]
   );
 
-  return getFieldMetric(id);
+  return getFieldMetricModel(id);
 }
 
-// Delete field metric
-export async function deleteFieldMetric(id) {
+// Delete field metric by id
+export async function deleteFieldMetricModel(id) {
   const [result] = await pool.query(
     `
     DELETE FROM field_metrics
-    WHERE id = ?
-  `,
+      WHERE id = ?
+   `,
     [id]
   );
   return result;

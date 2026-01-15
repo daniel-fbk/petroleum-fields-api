@@ -1,14 +1,20 @@
 import express from "express";
-import * as productionController from "../controllers/production.controller.js";
 import { validateRequest } from "../middleware/validate.request.js";
 import { productionSchema } from "../validators/production.validator.js";
+import {
+  createProductionController,
+  deleteProductionController,
+  getProductionController,
+  getProductionsController,
+  updateProductionController,
+} from "../controllers/production.controller.js";
 
 const router = express.Router();
 
-router.get("/", productionController.getProduction);
-router.get("/:id", productionController.getProductionEntry);
-router.post("/", validateRequest(productionSchema), productionController.createProductionEntry);
-router.put("/:id", validateRequest(productionSchema), productionController.updateProductionEntry);
-router.delete("/:id", productionController.deleteProductionEntry);
+router.get("/", getProductionsController);
+router.get("/:id", getProductionController);
+router.post("/", validateRequest(productionSchema), createProductionController);
+router.put("/:id", validateRequest(productionSchema), updateProductionController);
+router.delete("/:id", deleteProductionController);
 
 export default router;

@@ -1,23 +1,23 @@
 import pool from "../config/database.js";
 
 // Get Wells
-export async function getWells() {
+export async function getWellsModel() {
   const [rows] = await pool.query(
     `
     SELECT *
-    FROM wells
+      FROM wells
     `
   );
   return rows;
 }
 
 // Get Well by id
-export async function getWell(id) {
+export async function getWellModel(id) {
   const [rows] = await pool.query(
     `
     SELECT *
-    FROM wells
-    WHERE id = ?
+      FROM wells
+      WHERE id = ?
     `,
     [id]
   );
@@ -25,7 +25,7 @@ export async function getWell(id) {
 }
 
 // Create Well
-export async function createWell(data) {
+export async function createWellModel(data) {
   const {
     name,
     wellbore_id,
@@ -44,7 +44,7 @@ export async function createWell(data) {
     INSERT INTO wells 
       (name, wellbore_id, field_id, type_id, status, completion_type, spud_date, completion_date, latitude, longitude)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-     `,
+    `,
     [name, wellbore_id, field_id, type_id, status, completion_type, spud_date, completion_date, latitude, longitude]
   );
 
@@ -52,7 +52,7 @@ export async function createWell(data) {
 }
 
 // Update Well
-export async function updateWell(id, data) {
+export async function updateWellModel(id, data) {
   const {
     name,
     wellbore_id,
@@ -70,7 +70,7 @@ export async function updateWell(id, data) {
     `
     UPDATE wells
     SET name = ?, wellbore_id = ?, field_id = ?, type_id = ?, status = ?, completion_type = ?, spud_date = ?, completion_date = ?, latitude = ?, longitude = ?
-    WHERE id = ?
+      WHERE id = ?
      `,
     [name, wellbore_id, field_id, type_id, status, completion_type, spud_date, completion_date, latitude, longitude, id]
   );
@@ -79,11 +79,11 @@ export async function updateWell(id, data) {
 }
 
 // Delete Well by id
-export async function deleteWell(id) {
+export async function deleteWellModel(id) {
   const [result] = await pool.query(
     `
     DELETE FROM wells
-    WHERE id = ?
+      WHERE id = ?
     `,
     [id]
   );

@@ -1,21 +1,27 @@
-import * as wellTypesModel from "../models/wellTypes.model.js";
+import {
+  createWellTypeModel,
+  deleteWellTypeModel,
+  getWellTypeModel,
+  getWellTypesModel,
+  updateWellTypeModel,
+} from "../models/wellTypes.model.js";
 
-export async function listWellTypes() {
-  return wellTypesModel.getWellTypes();
+export async function getWellTypesService() {
+  return getWellTypesModel();
 }
 
-export async function getWellTypeById(id) {
-  return wellTypesModel.getWellType(id);
+export async function getWellTypeService(id) {
+  return getWellTypeModel(id);
 }
 
-export async function createWellType(data) {
-  return wellTypesModel.createWellType(data);
+export async function createWellTypeService(data) {
+  return createWellTypeModel(data);
 }
 
-export async function updateWellType(id, data) {
-  return wellTypesModel.updateWellType(id, data);
+export async function updateWellTypeService(id, data) {
+  return updateWellTypeModel(id, data);
 }
 
-export async function deleteWellType(id) {
-  return wellTypesModel.deleteWellType(id);
+export async function deleteWellTypeService(id) {
+  return deleteWellTypeModel(id);
 }

@@ -1,17 +1,25 @@
-import * as equipmentMaintenanceService from "../services/equipmentMaintenance.service.js";
+import {
+  createMaintenanceService,
+  deleteMaintenanceService,
+  getMaintenanceService,
+  getMaintenancesService,
+  updateMaintenanceService,
+} from "../services/equipmentMaintenance.service.js";
 
-export const getMaintenanceList = async (req, res, next) => {
+// Get all maintenance records
+export const getMaintenancesController = async (req, res, next) => {
   try {
-    const list = await equipmentMaintenanceService.getMaintenanceList();
+    const list = await getMaintenancesService();
     res.json(list);
   } catch (err) {
     next(err);
   }
 };
 
-export const getMaintenance = async (req, res, next) => {
+// Get a maintenance record
+export const getMaintenanceController = async (req, res, next) => {
   try {
-    const entry = await equipmentMaintenanceService.getMaintenanceById(req.params.id);
+    const entry = await getMaintenanceService(req.params.id);
     if (!entry) {
       const err = new Error(`Maintenance entry with id ${req.params.id} not found`);
       err.status = 404;
@@ -23,18 +31,20 @@ export const getMaintenance = async (req, res, next) => {
   }
 };
 
-export const createMaintenance = async (req, res, next) => {
+// Create a new maintenance record
+export const createMaintenanceController = async (req, res, next) => {
   try {
-    const entry = await equipmentMaintenanceService.createMaintenance(req.body);
+    const entry = await createMaintenanceService(req.body);
     res.status(201).json(entry);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateMaintenance = async (req, res, next) => {
+// Update an existing maintenance record
+export const updateMaintenanceController = async (req, res, next) => {
   try {
-    const updated = await equipmentMaintenanceService.updateMaintenance(req.params.id, req.body);
+    const updated = await updateMaintenanceService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Maintenance entry with id ${req.params.id} not found`);
       err.status = 404;
@@ -46,9 +56,10 @@ export const updateMaintenance = async (req, res, next) => {
   }
 };
 
-export const deleteMaintenance = async (req, res, next) => {
+// Delete a maintenance record
+export const deleteMaintenanceController = async (req, res, next) => {
   try {
-    const result = await equipmentMaintenanceService.deleteMaintenance(req.params.id);
+    const result = await deleteMaintenanceService(req.params.id);
     if (result.affectedRows === 0) {
       const err = new Error(`Maintenance entry with id ${req.params.id} not found`);
       err.status = 404;

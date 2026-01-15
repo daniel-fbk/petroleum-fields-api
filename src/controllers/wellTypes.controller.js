@@ -1,9 +1,15 @@
-import * as wellTypesService from "../services/wellTypes.service.js";
+import {
+  createWellTypeService,
+  deleteWellTypeService,
+  getWellTypeService,
+  getWellTypesService,
+  updateWellTypeService,
+} from "../services/wellTypes.service.js";
 
 // Get all well types
-export const getWellTypes = async (req, res, next) => {
+export const getWellTypesController = async (req, res, next) => {
   try {
-    const wellTypes = await wellTypesService.listWellTypes();
+    const wellTypes = await getWellTypesService();
     res.json(wellTypes);
   } catch (err) {
     next(err);
@@ -11,9 +17,9 @@ export const getWellTypes = async (req, res, next) => {
 };
 
 // Get a single well type by ID
-export const getWellType = async (req, res, next) => {
+export const getWellTypeController = async (req, res, next) => {
   try {
-    const wellType = await wellTypesService.getWellTypeById(req.params.id);
+    const wellType = await getWellTypeService(req.params.id);
     if (!wellType) {
       const err = new Error(`Well type with id ${req.params.id} not found`);
       err.status = 404;
@@ -26,9 +32,9 @@ export const getWellType = async (req, res, next) => {
 };
 
 // Create a new well type
-export const createWellType = async (req, res, next) => {
+export const createWellTypeController = async (req, res, next) => {
   try {
-    const newWellType = await wellTypesService.createWellType(req.body);
+    const newWellType = await createWellTypeService(req.body);
     res.status(201).json(newWellType);
   } catch (err) {
     next(err);
@@ -36,9 +42,9 @@ export const createWellType = async (req, res, next) => {
 };
 
 // Update an existing well type
-export const updateWellType = async (req, res, next) => {
+export const updateWellTypeController = async (req, res, next) => {
   try {
-    const updatedWellType = await wellTypesService.updateWellType(req.params.id, req.body);
+    const updatedWellType = await updateWellTypeService(req.params.id, req.body);
     if (!updatedWellType) {
       const err = new Error(`Well type with id ${req.params.id} not found`);
       err.status = 404;
@@ -51,9 +57,9 @@ export const updateWellType = async (req, res, next) => {
 };
 
 // Delete a well type
-export const deleteWellType = async (req, res, next) => {
+export const deleteWellTypeController = async (req, res, next) => {
   try {
-    const result = await wellTypesService.deleteWellType(req.params.id);
+    const result = await deleteWellTypeService(req.params.id);
     if (!result || result.affectedRows === 0) {
       const err = new Error(`Well type with id ${req.params.id} not found`);
       err.status = 404;

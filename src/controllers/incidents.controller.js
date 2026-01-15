@@ -1,17 +1,25 @@
-import * as incidentsService from "../services/incidents.service.js";
+import {
+  createIncidentService,
+  deleteIncidentService,
+  getIncidentService,
+  getIncidentsService,
+  updateIncidentService,
+} from "../services/incidents.service.js";
 
-export const getIncidents = async (req, res, next) => {
+// Get all Incidents
+export const getIncidentsController = async (req, res, next) => {
   try {
-    const list = await incidentsService.getIncidentsList();
+    const list = await getIncidentsService();
     res.json(list);
   } catch (err) {
     next(err);
   }
 };
 
-export const getIncident = async (req, res, next) => {
+// Get an Incident by ID
+export const getIncidentController = async (req, res, next) => {
   try {
-    const incident = await incidentsService.getIncidentById(req.params.id);
+    const incident = await getIncidentService(req.params.id);
     if (!incident) {
       const err = new Error(`Incident with id ${req.params.id} not found`);
       err.status = 404;
@@ -23,18 +31,20 @@ export const getIncident = async (req, res, next) => {
   }
 };
 
-export const createIncident = async (req, res, next) => {
+// Create a new Incident
+export const createIncidentController = async (req, res, next) => {
   try {
-    const incident = await incidentsService.createIncident(req.body);
+    const incident = await createIncidentService(req.body);
     res.status(201).json(incident);
   } catch (err) {
     next(err);
   }
 };
 
-export const updateIncident = async (req, res, next) => {
+// Update an existing Incident
+export const updateIncidentController = async (req, res, next) => {
   try {
-    const updated = await incidentsService.updateIncident(req.params.id, req.body);
+    const updated = await updateIncidentService(req.params.id, req.body);
     if (!updated) {
       const err = new Error(`Incident with id ${req.params.id} not found`);
       err.status = 404;
@@ -46,9 +56,10 @@ export const updateIncident = async (req, res, next) => {
   }
 };
 
-export const deleteIncident = async (req, res, next) => {
+// Delete an Incident
+export const deleteIncidentController = async (req, res, next) => {
   try {
-    const result = await incidentsService.deleteIncident(req.params.id);
+    const result = await deleteIncidentService(req.params.id);
     if (result.affectedRows === 0) {
       const err = new Error(`Incident with id ${req.params.id} not found`);
       err.status = 404;

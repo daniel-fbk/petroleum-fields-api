@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const wellSpecSchema = z.object({
+export const wellSpecsSchema = z.object({
   well_id: z.number().int().min(1),
   total_depth: z.number().min(0),
   tvd: z.number().min(0).optional().nullable(),
