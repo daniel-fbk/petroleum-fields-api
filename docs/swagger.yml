@@ -311,7 +311,7 @@ paths:
         404:
           description: Well not found
   # WellTypes
-  /well_types:
+  /well-types:
     get:
       summary: Get all well types
       tags: [WellTypes]
@@ -341,7 +341,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/WellType"
 
-  /well_types/{id}:
+  /well-types/{id}:
     get:
       summary: Get a well type by ID
       tags: [WellTypes]
@@ -400,7 +400,7 @@ paths:
           description: Well type not found
 
   # WellSpecs
-  /well_specs:
+  /well-specs:
     get:
       summary: Get all well specifications
       tags: [WellSpecs]
@@ -430,7 +430,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/WellSpec"
 
-  /well_specs/{id}:
+  /well-specs/{id}:
     get:
       summary: Get a well specification by ID
       tags: [WellSpecs]
@@ -667,7 +667,7 @@ paths:
           description: Incident not found
 
   # FieldMetrics
-  /field_metrics:
+  /field-metrics:
     get:
       summary: Get all field metrics
       tags: [FieldMetrics]
@@ -697,7 +697,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/FieldMetric"
 
-  /field_metrics/{id}:
+  /field-metrics/{id}:
     get:
       summary: Get a field metric by ID
       tags: [FieldMetrics]
@@ -845,7 +845,7 @@ paths:
           description: Equipment not found
 
   # EquipmentMaintenance
-  /equipment_maintenance:
+  /equipment-maintenance:
     get:
       summary: Get all maintenance records
       tags: [EquipmentMaintenance]
@@ -875,7 +875,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/EquipmentMaintenance"
 
-  /equipment_maintenance/{id}:
+  /equipment-maintenance/{id}:
     get:
       summary: Get a maintenance record by ID
       tags: [EquipmentMaintenance]
