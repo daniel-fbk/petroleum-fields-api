@@ -5,7 +5,7 @@ dotenv.config();
 
 // Define Zod schema
 const appConfigSchema = z.object({
-  PORT: z.string().regex(/^[0-9]+$/),
+  DB_PORT: z.string().regex(/^[0-9]+$/),
   DB_HOST: z.string(),
   DB_NAME: z.string(),
   DB_USER: z.string(),
@@ -22,7 +22,8 @@ if (!validatedConfig.success) {
 }
 
 const appConfig = {
-  PORT: parseInt(validatedConfig.data.PORT),
+  PORT: parseInt(process.env.PORT || validatedConfig.data.PORT),
+  DB_PORT: parseInt(validatedConfig.data.DB_PORT),
   DB_HOST: validatedConfig.data.DB_HOST,
   DB_NAME: validatedConfig.data.DB_NAME,
   DB_USER: validatedConfig.data.DB_USER,

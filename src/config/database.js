@@ -3,6 +3,8 @@ import appConfig from "./config.js";
 
 const pool = mysql
   .createPool({
+    port: appConfig.DB_PORT,
+
     host: appConfig.DB_HOST,
     database: appConfig.DB_NAME,
     user: appConfig.DB_USER,
